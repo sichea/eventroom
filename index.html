@@ -1,1 +1,90 @@
-<!DOCTYPE html><link rel="manifest" href="manifest.json"><script>navigator.serviceWorker.register('service-worker.js')</script>OK
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>eventroom</title>
+<link rel="manifest" href="manifest.json" />
+<style>
+  body{
+    margin:0; padding:0;
+    font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+    background:#f5f5f5;
+  }
+  .wrap{
+    max-width:420px;
+    margin:40px auto;
+    background:#fff;
+    padding:28px;
+    border-radius:14px;
+    box-shadow:0 2px 12px rgba(0,0,0,.06);
+  }
+  h2{margin-bottom:18px;}
+  input,button{
+    width:100%;
+    padding:14px;
+    font-size:17px;
+    border-radius:10px;
+    border:1px solid #ddd;
+  }
+  button{
+    margin-top:14px;
+    border:none;
+    background:#007aff;
+    color:#fff;
+    font-weight:600;
+  }
+  .result{
+    margin-top:24px;
+    font-size:19px;
+    font-weight:600;
+  }
+  .notes{
+    margin-top:14px;
+    font-size:15px;
+    opacity:.8;
+    line-height:1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <h2>kB공모주환불금 +14일 계산기</h2>
+
+  <input type="date" id="start"/>
+  <button onclick="calc()">계산</button>
+
+  <div class="result" id="result"></div>
+  <div class="notes" id="notes"></div>
+</div>
+
+<script>
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("service-worker.js");
+}
+
+function calc(){
+  const raw = document.getElementById("start").value;
+  if(!raw){ alert("날짜 입력"); return; }
+
+  const base = new Date(raw);
+
+  let d13=new Date(base); d13.setDate(d13.getDate()+13);
+  let d14=new Date(base); d14.setDate(d14.getDate()+14);
+
+  const f = d=>d.toISOString().slice(0,10);
+
+  document.getElementById("result").innerText="(+14일): "+f(d14);
+
+  document.getElementById("notes").innerHTML=
+  `머니마켓 펀드 매수: ${f(d13)}<br>
+   머니마켓 펀드 매도: ${f(d14)}<br><br>
+   p.s.<br>
+   300만원 = 국내주식쿠폰 1만원<br>
+   500만원 = 국내주식쿠폰 2만원`;
+}
+</script>
+
+</body>
+</html>
